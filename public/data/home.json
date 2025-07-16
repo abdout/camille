@@ -1,0 +1,34 @@
+{
+  "worksList": [
+    {
+      "image": "/images/home/regeneration.jpg",
+      "slug": "regeneration",
+      "title": "The Regeneration Suite",
+      "id": "1"
+    },
+    {
+      "image": "/images/home/loyality.jpg",
+      "slug": "loyality",
+      "title": "Reimagining Loyalty",
+      "id": "2"
+    },
+    {
+      "image": "/images/home/full-sound.jpg",
+      "slug": "full-sound",
+      "title": "Sound Expressed In Full",
+      "id": "3"
+    },
+    {
+      "image": "/images/home/wonder.jpg",
+      "slug": "wonder",
+      "title": "Reinventing Wonder",
+      "id": "4"
+    },
+    {
+      "image": "/images/home/canvas.jpg",
+      "slug": "canvas",
+      "title": "Beyond The Canvas",
+      "id": "5"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import items from '@/components/slider/camillemormal.json';
 
 export default function Home() {
   return (
-    <main>
+    <main className="overflow-hidden">
       <Slider items={items} />
     </main>
   );

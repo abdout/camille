@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -10,6 +11,29 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Define the custom font for work pages
+const neueHaasDisplay = localFont({
+  src: [
+    {
+      path: "../../public/font/NeueHaasDisplay/NeueHaasDisplayXThin.ttf",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../../public/font/NeueHaasDisplay/NeueHaasDisplayRoman.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/font/NeueHaasDisplay/NeueHaasDisplayBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-neue-haas-display",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,10 +47,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${neueHaasDisplay.variable}`}>
+      <body className="antialiased">
         {children}
       </body>
     </html>
