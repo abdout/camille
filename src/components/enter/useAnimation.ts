@@ -58,7 +58,7 @@ const resetResponsiveParameters = () => {
   };
 };
 
-export const useGalleryAnimation = () => {
+export const useGalleryAnimation = (onComplete?: () => void) => {
   const initializeAnimations = useCallback(() => {
     if (typeof window === 'undefined') return;
 
@@ -132,6 +132,11 @@ export const useGalleryAnimation = () => {
       },
       onComplete: () => {
         isGridScaleAnimateState = "complete";
+        // Call the onComplete callback when animation is finished
+        if (onComplete) {
+          // Reasonable delay for smooth but not rushed transition
+          setTimeout(onComplete, 400);
+        }
       },
     });
 
@@ -144,7 +149,7 @@ export const useGalleryAnimation = () => {
       // Add force3D to improve GPU acceleration
       force3D: true,
     });
-  }, []);
+  }, [onComplete]);
 
   const onResize = useCallback(() => {
     if (typeof window === 'undefined' || !contentRect) return;

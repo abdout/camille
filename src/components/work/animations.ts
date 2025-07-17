@@ -132,20 +132,17 @@ export const SliderAnim = {
   layer: {
     enter: (direction: number) => {
       return {
-        left: direction > 0 ? "100%" : "0%",
-        width: "0vw",
+        x: direction > 0 ? "100%" : "-100%",
         transition: transitionLayer,
       };
     },
     center: {
-      width: "100vw",
-      left: 0,
+      x: "0%",
       transition: transitionLayer,
     },
     exit: (direction: number) => {
       return {
-        width: "0vw",
-        left: direction < 0 ? "100%" : "0%",
+        x: direction < 0 ? "100%" : "-100%",
         transition: transitionLayer,
       };
     },

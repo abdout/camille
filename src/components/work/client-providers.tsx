@@ -28,7 +28,7 @@ export const ClientProviders = ({ children }: ClientProvidersProps) => {
   }, []);
 
   if (!isClient) {
-    return <div className="loading-state">Loading...</div>;
+    return <div style={{ opacity: 0, height: 0 }}></div>;
   }
 
   return (

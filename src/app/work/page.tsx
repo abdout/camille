@@ -5,25 +5,59 @@ import { motion } from "framer-motion";
 import { anim, PageAnim } from "@/components/work/animations";
 import { DataProvider } from "@/components/work/data-provider";
 import { Works } from "@/components/work/works";
+import { LoadingScreen } from "@/components/enter/loading";
+import { ImageGallery } from "@/components/enter/gallery";
 import { classNames } from "@/components/work/utils";
+import '@/components/enter/style.css';
+
+type PageState = 'loading' | 'gallery' | 'work';
 
 export default function Home() {
-  const [loaderFinished, setLoaderFinished] = useState(true); // Set to true for now, will implement loader later
+  const [pageState, setPageState] = useState<PageState>('loading');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  const handleLoadingComplete = () => {
+    setPageState('gallery');
+  };
+
+  const handleGalleryComplete = () => {
+    setPageState('work');
+  };
+
   return (
-    // <motion.main 
-    //   {...anim(PageAnim.presencePage)} 
-    //   className={classNames("home", {
-    //     "home--loading": !loaderFinished,
-    //   })}
-    // >
-      <DataProvider url="/data/home.json">
-        <Works />
-      </DataProvider>
-    // </motion.main>
+    <>
+      {pageState === 'loading' && (
+        <LoadingScreen onComplete={handleLoadingComplete} />
+      )}
+      
+      {pageState === 'gallery' && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 1000,
+          backgroundColor: '#121214',
+          overflow: 'hidden'
+        }}>
+          <ImageGallery onComplete={handleGalleryComplete} />
+        </div>
+      )}
+      
+      {pageState === 'work' && (
+        <motion.main 
+          {...anim(PageAnim.presencePage)} 
+          className={classNames("home")}
+        >
+          <DataProvider url="/data/home.json">
+            <Works />
+          </DataProvider>
+        </motion.main>
+      )}
+    </>
   );
 }

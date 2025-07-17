@@ -4,8 +4,12 @@ import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useGalleryAnimation } from '@/components/enter/useAnimation';
 
-export const ImageGallery: React.FC = () => {
-  const { initializeAnimations } = useGalleryAnimation();
+interface ImageGalleryProps {
+  onComplete?: () => void;
+}
+
+export const ImageGallery: React.FC<ImageGalleryProps> = ({ onComplete }) => {
+  const { initializeAnimations } = useGalleryAnimation(onComplete);
 
   useEffect(() => {
     // Initialize animations after component mounts

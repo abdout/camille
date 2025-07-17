@@ -17,7 +17,7 @@ export const Works: React.FC = () => {
   const [activeWork, setActiveWork] = useState(data.worksList[0]);
   const [lastScrollTime, setLastScrollTime] = useState(0);
   const [titleHover, setTitleHover] = useState(false);
-  
+
   const leftControlRef = useRef<HTMLHeadingElement>(null);
   const rightControlRef = useRef<HTMLHeadingElement>(null);
 
@@ -26,7 +26,7 @@ export const Works: React.FC = () => {
       (page + newDirection + data.worksList.length) % data.worksList.length;
     setPage([newPage, newDirection]);
     setActiveWork(data.worksList[newPage]);
-    
+
     // Animate both icons together with relative rotation
     if (leftControlRef.current && rightControlRef.current) {
       gsap.to([leftControlRef.current, rightControlRef.current], {
@@ -44,7 +44,7 @@ export const Works: React.FC = () => {
     const direction = index < page ? -1 : 1;
     setPage([newPage, direction]);
     setActiveWork(data.worksList[newPage]);
-    
+
     // Animate both icons together with relative rotation
     if (leftControlRef.current && rightControlRef.current) {
       gsap.to([leftControlRef.current, rightControlRef.current], {
@@ -101,6 +101,7 @@ export const Works: React.FC = () => {
             height: 100vh;
             width: 100vw;
             overflow: hidden;
+            background-color: #121214;
           }
 
           .full-screen-work {
@@ -112,6 +113,8 @@ export const Works: React.FC = () => {
             justify-content: center;
             position: absolute;
             top: 0;
+            left: 0;
+            will-change: transform;
           }
 
           .full-screen-work__image {
@@ -120,7 +123,7 @@ export const Works: React.FC = () => {
             height: 100%;
             z-index: -1;
             transition: 1s cubic-bezier(0.08, 0.99, 0.39, 1);
-            transform-origin: scale filter;
+            
             object-fit: cover;
           }
 
@@ -161,8 +164,8 @@ export const Works: React.FC = () => {
           }
 
           .full-screen-work__control {
-            font-weight: 100;
-            font-size: 4.5vw;
+            font-weight: 50;
+            font-size: 6vw;
             cursor: pointer;
             user-select: none;
             margin: 0;
@@ -172,8 +175,8 @@ export const Works: React.FC = () => {
             color: inherit;
             position: absolute;
             top: 50%;
-            width: 4.5vw;
-            height: 4.5vw;
+            width: 6vw;
+            height: 6vw;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -209,9 +212,9 @@ export const Works: React.FC = () => {
 
           @media (max-width: 768px) {
             .full-screen-work__control {
-              font-size: 8vw;
-              width: 8vw;
-              height: 8vw;
+              font-size: 10vw;
+              width: 10vw;
+              height: 10vw;
             }
             
             .full-screen-work__content {
@@ -297,47 +300,59 @@ export const Works: React.FC = () => {
               ref={leftControlRef}
               className="full-screen-work__control full-screen-work__control--left"
               onClick={() => paginate(-1)}
+              style={{
+                fontSize: '4vw',
+                fontWeight: 30,
+                width: '4vw',
+                height: '4vw'
+              }}
             >
               +
             </motion.h1>
 
-                          <Link href={`/work/works/${activeWork.slug}`} className="text">
-                <div style={{ position: 'relative', display: 'inline-block' }}>
-                  <AnimatePresence mode="popLayout">
-                    <motion.h1 
-                      {...anim(SliderAnim.text)} 
-                      key={activeWork.title} 
-                      onHoverStart={() => setTitleHover(true)} 
-                      onHoverEnd={() => setTitleHover(false)}
+            <Link href={`/work/works/${activeWork.slug}`} className="text">
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <AnimatePresence mode="popLayout">
+                  <motion.h1
+                    {...anim(SliderAnim.text)}
+                    key={activeWork.title}
+                    onHoverStart={() => setTitleHover(true)}
+                    onHoverEnd={() => setTitleHover(false)}
+                  >
+                    {activeWork.title}
+                  </motion.h1>
+                </AnimatePresence>
+                <AnimatePresence>
+                  {titleHover && (
+                    <motion.span
+                      key="number-indicator"
+                      className="title-number-indicator"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{
+                        type: "tween",
+                        ease: "easeInOut",
+                        duration: 0.5
+                      }}
                     >
-                      {activeWork.title}
-                    </motion.h1>
-                  </AnimatePresence>
-                  <AnimatePresence>
-                    {titleHover && (
-                      <motion.span
-                        key="number-indicator"
-                        className="title-number-indicator"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -5 }}
-                        transition={{ 
-                          type: "tween",
-                          ease: "easeInOut",
-                          duration: 0.5
-                        }}
-                      >
-                        15
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </Link>
+                      15
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
+            </Link>
 
             <motion.h1
               ref={rightControlRef}
               className="full-screen-work__control full-screen-work__control--right"
               onClick={() => paginate(1)}
+              style={{
+                fontSize: '4vw',
+                fontWeight: 30,
+                width: '4vw',
+                height: '4vw'
+              }}
             >
               +
             </motion.h1>
@@ -352,11 +367,12 @@ export const Works: React.FC = () => {
             animate="center"
             exit="exit"
           >
-                          <img
-                src={activeWork.image}
-                alt="full-screen-work"
-                className="full-screen-work__image"
-              />
+            <img
+              src={activeWork.image}
+              alt="full-screen-work"
+              className="full-screen-work__imag"
+            />
+            
           </motion.div>
         </AnimatePresence>
         <ul className="works-thumbnail">

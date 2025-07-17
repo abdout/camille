@@ -29,6 +29,24 @@
       "slug": "canvas",
       "title": "Beyond The Canvas",
       "id": "5"
+    },
+    {
+      "image": "/images/home/food.jpg",
+      "slug": "food",
+      "title": "Food & Drink",
+      "id": "6"
+    },
+    {
+      "image": "/images/home/school.jpg",
+      "slug": "school",
+      "title": "School of Life",
+      "id": "7"
+    },
+    {
+      "image": "/images/home/health.jpg",
+      "slug": "health",
+      "title": "Health & Wellness",
+      "id": "8"
     }
   ]
 }

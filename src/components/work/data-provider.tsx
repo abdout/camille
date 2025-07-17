@@ -47,8 +47,8 @@ export const DataProvider = ({ children, url, queryKey, fallback }: DataProvider
   // Show loading state
   if (isLoading) {
     return (
-      <div className="loading-state">
-        <div className="loader">Loading...</div>
+      <div className="loading-state" style={{ opacity: 0 }}>
+        <div className="loader"></div>
       </div>
     );
   }
