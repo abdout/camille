@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from "framer-motion";
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -12,11 +13,13 @@ import { HomeData } from "./type";
 
 export const Works: React.FC = () => {
   const { data } = useDataContext<HomeData>();
+  const router = useRouter();
 
   const [[page, direction], setPage] = useState([0, 0]);
   const [activeWork, setActiveWork] = useState(data.worksList[0]);
   const [lastScrollTime, setLastScrollTime] = useState(0);
   const [titleHover, setTitleHover] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const leftControlRef = useRef<HTMLHeadingElement>(null);
   const rightControlRef = useRef<HTMLHeadingElement>(null);
@@ -40,6 +43,8 @@ export const Works: React.FC = () => {
   };
 
   const paginateThumbnail = (index: number) => {
+    if (isDragging) return; // Prevent click if dragging
+    
     const newPage = (index + data.worksList.length) % data.worksList.length;
     const direction = index < page ? -1 : 1;
     setPage([newPage, direction]);
@@ -54,6 +59,20 @@ export const Works: React.FC = () => {
         transformOrigin: "center center",
         y: "-50%",
       });
+    }
+  };
+
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleDragEnd = (event: any, info: any) => {
+    setIsDragging(false);
+    
+    // If dragged more than 50px, navigate to slider view
+    const distance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
+    if (distance > 50) {
+      window.location.href = '/slider';
     }
   };
 
@@ -378,13 +397,19 @@ export const Works: React.FC = () => {
         <ul className="works-thumbnail">
           {data.worksList.map((currW, i) => (
             <li key={i} className="works-thumbnail__image-wrapper">
-              <img
+              <motion.img
                 src={currW.image}
                 alt="thumbnail"
                 className={classNames("works-thumbnail__image", {
                   "works-thumbnail__image--active": page === i,
                 })}
                 onClick={() => paginateThumbnail(i)}
+                drag
+                dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                dragElastic={0.1}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                style={{ cursor: 'default' }}
               />
             </li>
           ))}

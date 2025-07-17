@@ -3,16 +3,21 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import normalizeWheel from 'normalize-wheel';
 import { clamp, interpolate } from 'gsap/all';
+import { useRouter } from 'next/navigation';
 
 import Pagination from './pagination';
 import Item, { ItemRef } from './item';
 import Cross from './cross';
 
+interface WorkItem {
+  image: string;
+  slug: string;
+  title?: string;
+  [key: string]: any;
+}
+
 interface SliderProps {
-  items: Array<{
-    image: string;
-    [key: string]: any;
-  }>;
+  items: WorkItem[];
 }
 
 const Slider: React.FC<SliderProps> = ({ items }) => {
@@ -21,6 +26,8 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
   const [maxScroll, setMaxScroll] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragging, setDragging] = useState(false);
+
+  const router = useRouter();
   
   const sliderItemsRef = useRef<(ItemRef | null)[]>([]);
   const dragStartRef = useRef(0);
@@ -51,9 +58,13 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
     }
   }, [x]);
 
-  const handleClick = useCallback((item: ItemRef) => {
-    console.log(item);
-  }, []);
+  // Navigate to the corresponding work detail page when a thumbnail/item is clicked
+  const navigateToWork = useCallback((index: number) => {
+    const work = items[index];
+    if (work && work.slug) {
+      router.push(`/work/works/${work.slug}`);
+    }
+  }, [items, router]);
 
   const handleMouseDown = useCallback((e: MouseEvent) => {
     const target = (e.target as HTMLElement).closest('.item');
@@ -67,15 +78,15 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
   const handleMouseUp = useCallback(() => {
     setDragging(false);
     const distance = Math.abs(x - dragXStartRef.current);
-    const item = sliderItemsRef.current[triggerIndexRef.current || 0];
-    
-    if (item && distance <= 6) {
-      handleClick(item);
+
+    // Treat as a click if the drag distance is small
+    if (distance <= 6 && triggerIndexRef.current !== null) {
+      navigateToWork(triggerIndexRef.current);
     }
     
     triggerIndexRef.current = null;
     dragStartRef.current = 0;
-  }, [x, handleClick]);
+  }, [x, navigateToWork]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!dragging) return;
@@ -158,7 +169,7 @@ const Slider: React.FC<SliderProps> = ({ items }) => {
     <div>
       <Cross />
       
-      <div className={`flex items-center h-screen ${dragging ? 'pointer-events-none' : ''}`}>
+      <div className={`flex items-center  h-screen ${dragging ? 'pointer-events-none' : ''}`}>
         <div
           className="flex items-center justify-start w-full space-x-7 pl-[50vw] select-none"
           style={{ transform: `translateX(calc(${positionX}px + -9vw))` }}

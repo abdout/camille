@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useDataContext } from "./data-provider";
-import { ProgressWorks } from "./progress-works";
+// import { ProgressWorks } from "./progress-works";
 
 export const WorkImages: React.FC = () => {
   const { data } = useDataContext<any>();
@@ -11,7 +11,7 @@ export const WorkImages: React.FC = () => {
 
   return (
     <section className="works-images" id="works-images">
-      <ProgressWorks />
+      {/* <ProgressWorks /> */}
       {imagesData.map((currArImages: string[], i: number) => (
         <div className="works-images__images-wrapper" key={i}>
           {currArImages.map((currImage: string, j: number) => (
