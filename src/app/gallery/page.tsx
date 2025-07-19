@@ -19,7 +19,32 @@ export default function Home() {
   const { data, isLoading, error } = useData("/data/home.json");
 
   useEffect(() => {
+    // Set flag to indicate we've visited gallery
+    sessionStorage.setItem('visitedGallery', 'true');
+    
+    // Apply gallery-specific styles on mount
+    document.documentElement.classList.add('work-layout');
+    document.body.classList.add('work-layout');
     window.scrollTo(0, 0);
+
+    // Cleanup function to remove gallery styles on unmount
+    return () => {
+      document.documentElement.classList.remove('work-layout');
+      document.body.classList.remove('work-layout');
+      
+      // Reset any overflow/scroll modifications
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.documentElement.style.height = '';
+      document.body.style.height = '';
+      
+      // Clear any custom CSS variables that might interfere
+      document.documentElement.style.removeProperty('--c-white');
+      document.documentElement.style.removeProperty('--c-black');
+      
+      // Force a reflow to ensure styles are properly removed
+      document.body.offsetHeight;
+    };
   }, []);
 
   const handleLoadingComplete = () => {

@@ -1,10 +1,109 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Loading } from "@/components/ui/loading";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if we're coming from gallery or if gallery styles are contaminating
+    const checkForGalleryContamination = () => {
+      const hasGalleryClass = document.documentElement.classList.contains('work-layout') || 
+                             document.body.classList.contains('work-layout');
+      const referrer = document.referrer;
+      const isFromGallery = referrer.includes('/gallery') || hasGalleryClass;
+      
+      // Check sessionStorage flag set by gallery page
+      const visitedGallery = sessionStorage.getItem('visitedGallery') === 'true';
+      
+      // Check for gallery-specific CSS variables that indicate contamination
+      const hasGalleryVars = getComputedStyle(document.documentElement).getPropertyValue('--c-white') || 
+                            getComputedStyle(document.documentElement).getPropertyValue('--c-black');
+      
+      return isFromGallery || hasGalleryVars || hasGalleryClass || visitedGallery;
+    };
+
+    // Force refresh if coming from gallery
+    if (checkForGalleryContamination()) {
+      setIsRefreshing(true);
+      
+      // Clear the gallery flag to prevent infinite refreshes
+      sessionStorage.removeItem('visitedGallery');
+      
+      // Small delay to show loading state before refresh
+      setTimeout(() => {
+        // Force complete page reload to reset all styles
+        window.location.reload();
+      }, 500);
+      
+      return;
+    }
+
+    // Clean up any residual gallery styles
+    const cleanupGalleryStyles = () => {
+      // Remove work-layout class from document
+      document.documentElement.classList.remove('work-layout');
+      document.body.classList.remove('work-layout');
+      
+      // Reset any overflow/scroll modifications
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.documentElement.style.height = '';
+      document.body.style.height = '';
+      
+      // Clear CSS variables
+      document.documentElement.style.removeProperty('--c-white');
+      document.documentElement.style.removeProperty('--c-black');
+      document.documentElement.style.removeProperty('--g-100');
+      document.documentElement.style.removeProperty('--g-90');
+      document.documentElement.style.removeProperty('--g-80');
+      document.documentElement.style.removeProperty('--g-70');
+      
+      // Reset scroll position
+      window.scrollTo(0, 0);
+      
+      // Force style recalculation
+      document.body.offsetHeight;
+    };
+
+    // Normal homepage load
+    cleanupGalleryStyles();
+
+    // Show loading for smooth transition
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+      setTimeout(() => setIsReady(true), 100);
+    }, 300);
+
+    return () => {
+      clearTimeout(loadingTimer);
+    };
+  }, []);
+
+  // Show refreshing state
+  if (isRefreshing) {
+    return <Loading message="Refreshing homepage..." />;
+  }
+
+  // Show loading state
+  if (isLoading) {
+    return <Loading message="Preparing homepage..." />;
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-white space-y-2">
+    <div 
+      className={`flex flex-col items-center justify-center h-screen text-white space-y-2 transition-opacity duration-300 ${
+        isReady ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
       <h1 className="text-4xl font-bold ">Award Winning</h1>
       <Link href="https://camillemormal.com/" className="underline text-blue-500 text-lg">camillemormal.com</Link>
       <div className="grid grid-cols-1 md:grid-cols-3 items-center justify-center gap-8 mt-8">
