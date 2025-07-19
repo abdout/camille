@@ -20,6 +20,10 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## 🌀 Homepage Loading
+
+The homepage now features a custom animated loading screen, inspired by shadcn UI patterns. The loading logic is implemented in [`src/components/gallery/enter/loading.tsx`](src/components/gallery/enter/loading.tsx) and integrated into [`src/app/page.tsx`](src/app/page.tsx).
+
 ## 📚 Documentation
 
 - **[Homepage Auto-Refresh Logic](./docs/homepage-auto-refresh.md)** - Technical documentation explaining the automatic refresh system that resolves style contamination when navigating from gallery to homepage.
