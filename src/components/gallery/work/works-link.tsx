@@ -73,24 +73,19 @@ export const WorksLink: React.FC<WorksLinkProps> = ({ setNavigating, data }) => 
       <div className="link--sticky">
         <motion.img
           src={nextData.image}
-          alt=""
-          className="link__image"
           style={{ clipPath, scale }}
+          alt="next-proj"
+          className="link__image"
         />
         <div className="link__title">
-          <h1>{nextData.title}</h1>
-          <div className="progress">
-            <span className="progress__num">{progressValue}%</span>
-            <AnchorLink
-              toSection="#"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigate();
-              }}
-            >
-              Next Project
-            </AnchorLink>
-          </div>
+          <AnchorLink 
+            toSection="#bottom" 
+            className="progress"
+          >
+            <h1>{nextData.title}</h1>
+            <span className="progress__num small-text">{progressValue}</span>
+          </AnchorLink>
+          <h2>Next Project</h2>
         </div>
       </div>
     </section>

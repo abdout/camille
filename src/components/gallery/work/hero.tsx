@@ -44,22 +44,101 @@ export const Hero: React.FC<HeroProps> = ({ data }) => {
         style={{ objectPosition }}
       />
       <div className="description">
-        <div className="title">
-          {heroData.title.map((line, index) => (
-            <span key={index}>{line}</span>
+        <h1 className="title">
+          {heroData.title.map((currT: string, i: number) => (
+            <motion.span 
+              {...anim(WorksAnim.hero)} 
+              custom={i} 
+              key={i}
+              style={{ 
+                fontWeight: 400,
+                fontSize: "2.5vw",
+                lineHeight: "105%",
+                letterSpacing: "0.05vw",
+                color: "#fff"
+              }}
+            >
+              {currT}
+            </motion.span>
           ))}
-        </div>
+        </h1>
+
         <div className="lead-designer">
-          <h2>Lead Designer</h2>
-          <p>{heroData.leadDesigner}</p>
+          <motion.h2
+            {...anim(WorksAnim.hero)}
+            custom={2.5}
+            style={{
+              fontWeight: 500,
+              fontSize: "1.5vw",
+              lineHeight: "105%",
+              letterSpacing: "0.05vw",
+              color: "#fff"
+            }}
+          >
+            Lead Designer
+          </motion.h2>
+          <motion.p
+            {...anim(WorksAnim.hero)}
+            custom={3}
+            className="small-text shadow"
+            style={{
+              paddingTop: "1vw",
+              fontWeight: 400,
+              fontSize: "1.4vw",
+              lineHeight: "115%",
+              letterSpacing: "0.1vw",
+              color: "#f0f0f0"
+            }}
+            dangerouslySetInnerHTML={{ __html: heroData.leadDesigner }}
+          />
         </div>
+
         <div className="done-with">
-          <h2>Done With</h2>
-          <p>{heroData.doneWith}</p>
+          <motion.h2
+            {...anim(WorksAnim.hero)}
+            custom={3.5}
+            style={{
+              fontWeight: 500,
+              fontSize: "1.5vw",
+              lineHeight: "105%",
+              letterSpacing: "0.05vw",
+              color: "#fff"
+            }}
+          >
+            Done With
+          </motion.h2>
+          <motion.p
+            {...anim(WorksAnim.hero)}
+            custom={4}
+            className="small-text shadow"
+            style={{
+              paddingTop: "1vw",
+              fontWeight: 400,
+              fontSize: "1.4vw",
+              lineHeight: "115%",
+              letterSpacing: "0.1vw",
+              color: "#f0f0f0"
+            }}
+          >
+            {heroData.doneWith}
+          </motion.p>
         </div>
-        <div className="scroll-down">
-          <AnchorLink toSection="#works-images" className="small-text">
-            Scroll Down
+
+        <div 
+          className="scroll-down"
+          style={{
+            fontWeight: 400,
+            fontSize: "1.3vw",
+            lineHeight: "115%",
+            letterSpacing: "0.1vw",
+            color: "#f0f0f0",
+            padding: 0,
+            margin: 0,
+            marginLeft: "-1vw"
+          }}
+        >
+          <AnchorLink className="small-text" toSection="#works-images">
+            Scroll down
           </AnchorLink>
         </div>
       </div>

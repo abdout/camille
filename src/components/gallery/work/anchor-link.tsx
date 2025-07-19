@@ -20,7 +20,7 @@ export const AnchorLink: React.FC<AnchorLinkProps> = ({
   ...rest 
 }) => {
   const pathname = usePathname();
-  const { scrollTo } = useScroll();
+  const { scrollTo, isReady } = useScroll();
 
   useEffect(() => {
     if (pathname && pathname.includes('#')) {
@@ -41,7 +41,31 @@ export const AnchorLink: React.FC<AnchorLinkProps> = ({
       onClick(event);
       return;
     }
-    scrollTo(event, toSection);
+
+    event.preventDefault();
+    
+    // Wait a bit if scroll is not ready yet, then try again
+    if (!isReady) {
+      setTimeout(() => {
+        const element = document.querySelector(toSection);
+        if (element) {
+          // Use enhanced native scroll with proper offset for #works-images
+          if (toSection === "#works-images") {
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - 100;
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          } else {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }, 200);
+    } else {
+      scrollTo(event, toSection);
+    }
   };
 
   return (
