@@ -381,7 +381,7 @@ export const Works: React.FC = () => {
             className="full-screen-work"
             key={page}
             custom={direction}
-            variants={SliderAnim.layer}
+            variants={SliderAnim.layer as any}
             initial="enter"
             animate="center"
             exit="exit"
