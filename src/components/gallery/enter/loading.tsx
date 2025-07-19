@@ -8,6 +8,7 @@ interface LoadingScreenProps {
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [count, setCount] = useState(0);
+  const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
   useEffect(() => {
     if (count < 100) {
@@ -19,9 +20,18 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
       return () => clearTimeout(timeout);
     } else {
-      // When reaching 100%, wait a bit then call onComplete
-      const timeout = setTimeout(onComplete, 300);
-      return () => clearTimeout(timeout);
+      // When reaching 100%, start the upward animation
+      const animationTimeout = setTimeout(() => {
+        setIsAnimatingOut(true);
+      }, 200);
+
+      // Call onComplete after animation finishes
+      const completeTimeout = setTimeout(onComplete, 1000); // 200ms delay + 800ms animation
+
+      return () => {
+        clearTimeout(animationTimeout);
+        clearTimeout(completeTimeout);
+      };
     }
   }, [count, onComplete]);
 
@@ -38,13 +48,25 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       alignItems: 'center',
       zIndex: 1000,
     }}>
+      {/* Clipping container - this creates the "line" effect */}
       <div style={{
-        color: 'white',
-        fontSize: '18px',
-        fontWeight: '300',
-        fontFamily: 'Inter, system-ui, sans-serif',
+        height: '12px', // Exact height of the text content
+        overflow: 'hidden', // This creates the progressive hiding effect
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}>
-        {count}%
+        <div style={{
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: '500',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          lineHeight: '12px', // Match the container height
+          transform: isAnimatingOut ? 'translateY(-25px)' : 'translateY(0)',
+          transition: 'transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        }}>
+          {count}%
+        </div>
       </div>
     </div>
   );

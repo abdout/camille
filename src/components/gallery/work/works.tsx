@@ -74,7 +74,7 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
     // If dragged more than 50px, navigate to slider view
     const distance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
     if (distance > 50) {
-      window.location.href = '/gallery/slider';
+      window.location.href = '/slider';
     }
   };
 
