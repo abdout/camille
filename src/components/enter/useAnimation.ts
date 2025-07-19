@@ -58,9 +58,42 @@ const resetResponsiveParameters = () => {
   };
 };
 
+// Add cleanup function to reset all state
+const resetAnimationState = () => {
+  // Reset global state variables
+  isGridScaleAnimateState = "idle";
+  
+  // Kill any existing animations
+  gsap.killTweensOf("*");
+  
+  if (typeof window === 'undefined') return;
+
+  // Reset grid transform
+  const grid = document.getElementById("grid");
+  if (grid) {
+    gsap.set(grid, { scale: 1, clearProps: "all" });
+  }
+
+  // Reset all content elements
+  const allContent = document.querySelectorAll(".content");
+  allContent.forEach(content => {
+    content.classList.remove("ready");
+    gsap.set(content, { y: 0, clearProps: "all" });
+  });
+
+  // Reset home image
+  const homeImages = document.querySelectorAll(".content.home img");
+  homeImages.forEach(img => {
+    gsap.set(img, { scale: 1.5, clearProps: "all" });
+  });
+};
+
 export const useGalleryAnimation = (onComplete?: () => void) => {
   const initializeAnimations = useCallback(() => {
     if (typeof window === 'undefined') return;
+
+    // First, reset any existing animation state
+    resetAnimationState();
 
     // Get content rect
     const contentElement = document.querySelector(".content");
@@ -88,10 +121,22 @@ export const useGalleryAnimation = (onComplete?: () => void) => {
 
     if (!grid || !center.length) return;
 
+    // Set initial positions for all content elements
+    const allContent = document.querySelectorAll(".content");
+    allContent.forEach(content => {
+      gsap.set(content, { y: "120vh" });
+    });
+
+    // Set backward elements to start from top
+    backwards.forEach((backwardGroup) => {
+      backwardGroup.forEach(content => {
+        gsap.set(content, { y: "-120vh" });
+      });
+    });
+
     // Add ready class to all content elements to make them visible
     // Small delay to ensure everything is properly initialized
     setTimeout(() => {
-      const allContent = document.querySelectorAll(".content");
       allContent.forEach(content => content.classList.add("ready"));
     }, 100);
 
@@ -121,15 +166,12 @@ export const useGalleryAnimation = (onComplete?: () => void) => {
     });
 
     // Grid scale animation with improved smoothness
-    isGridScaleAnimateState = "idle";
+    isGridScaleAnimateState = "animating";
     gridScaleAnimation = gsap.to(grid, {
       scale: contentTargetScale,
       duration: 4.5,
       ease: "expo.inOut",
       delay: 1.2,
-      onStart: () => {
-        isGridScaleAnimateState = "animating";
-      },
       onComplete: () => {
         isGridScaleAnimateState = "complete";
         // Call the onComplete callback when animation is finished
@@ -202,7 +244,8 @@ export const useGalleryAnimation = (onComplete?: () => void) => {
 
     return () => {
       window.removeEventListener("resize", debouncedResize);
-      gsap.killTweensOf("*");
+      // Clean up animations when component unmounts
+      resetAnimationState();
     };
   }, [onResize]);
 

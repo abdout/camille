@@ -10,6 +10,11 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    // Reset count to 0 when component mounts (important for re-triggers)
+    setCount(0);
+  }, []);
+
+  useEffect(() => {
     if (count < 100) {
       const timeout = setTimeout(() => {
         // Increment by random amount between 1-8 for more realistic loading

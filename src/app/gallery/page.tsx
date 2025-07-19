@@ -15,6 +15,7 @@ type PageState = 'loading' | 'gallery' | 'work';
 
 export default function Home() {
   const [pageState, setPageState] = useState<PageState>('loading');
+  const [animationKey, setAnimationKey] = useState(0);
   const { data, isLoading, error } = useData("/data/home.json");
 
   useEffect(() => {
@@ -29,6 +30,12 @@ export default function Home() {
     setPageState('work');
   };
 
+  // Function to restart the animation sequence (useful for debugging or user action)
+  const restartAnimation = () => {
+    setAnimationKey(prev => prev + 1);
+    setPageState('loading');
+  };
+
   // Show error state
   if (error) {
     return (
@@ -37,6 +44,9 @@ export default function Home() {
           <div className="error-state">
             <h2>Error loading data</h2>
             <p>Please try refreshing the page.</p>
+            <button onClick={restartAnimation} style={{ marginTop: '10px' }}>
+              Retry
+            </button>
           </div>
         </main>
       </div>
@@ -47,7 +57,10 @@ export default function Home() {
     <div className="work-layout font-neue-haas-display">
       <main className="main">
         {pageState === 'loading' && (
-          <LoadingScreen onComplete={handleLoadingComplete} />
+          <LoadingScreen 
+            key={`loading-${animationKey}`}
+            onComplete={handleLoadingComplete} 
+          />
         )}
         
         {pageState === 'gallery' && (
@@ -61,7 +74,10 @@ export default function Home() {
             backgroundColor: '#121214',
             overflow: 'hidden'
           }}>
-            <ImageGallery onComplete={handleGalleryComplete} />
+            <ImageGallery 
+              key={`gallery-${animationKey}`}
+              onComplete={handleGalleryComplete} 
+            />
           </div>
         )}
         
@@ -78,6 +94,28 @@ export default function Home() {
           <div className="loading-state" style={{ opacity: 0 }}>
             <div className="loader"></div>
           </div>
+        )}
+
+        {/* Debug button for testing (remove in production) */}
+        {process.env.NODE_ENV === 'development' && pageState === 'work' && (
+          <button 
+            onClick={restartAnimation}
+            style={{
+              position: 'fixed',
+              top: '20px',
+              right: '20px',
+              zIndex: 9999,
+              padding: '10px 15px',
+              backgroundColor: '#333',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Restart Animation
+          </button>
         )}
       </main>
     </div>
