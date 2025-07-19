@@ -39,7 +39,6 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
         duration: 0.8,
         ease: "power2.out",
         transformOrigin: "center center",
-        y: "-50%",
       });
     }
   };
@@ -59,7 +58,6 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
         duration: 0.8,
         ease: "power2.out",
         transformOrigin: "center center",
-        y: "-50%",
       });
     }
   };
@@ -102,7 +100,6 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
       gsap.set([leftControlRef.current, rightControlRef.current], {
         rotation: 0,
         transformOrigin: "center center",
-        y: "-50%",
       });
     }
   }, []);
@@ -154,10 +151,10 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
           }
 
           .full-screen-work__content {
-            position: absolute;
+            position: fixed;
             z-index: 10;
             left: 50%;
-            top: 50%;
+            top: 50vh;
             transform: translate(-50%, -50%);
             width: 65vw;
             height: 4.5vw;
@@ -195,13 +192,13 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
             background: transparent;
             color: inherit;
             position: absolute;
-            top: 50%;
+            top: 0;
             width: 6vw;
-            height: 6vw;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: translateY(-50%);
+            transform: none;
             transform-origin: center center;
             transition: transform 0.1s ease;
             pointer-events: auto;
@@ -216,7 +213,7 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
           }
 
           .full-screen-work__control:active {
-            transform: translateY(-50%) scale(0.95);
+            transform: scale(0.95);
           }
 
           .title-number-indicator {
@@ -235,12 +232,13 @@ export const Works: React.FC<WorksProps> = ({ data }) => {
             .full-screen-work__control {
               font-size: 10vw;
               width: 10vw;
-              height: 10vw;
+              height: 100%;
             }
             
             .full-screen-work__content {
               width: 80vw;
               height: 8vw;
+              top: 50vh;
             }
             
             .full-screen-work__content .text {
