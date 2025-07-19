@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useEffect, useCallback, useState } from 'react';
-import { easings } from './animations';
+import { useEffect, useCallback, useRef, useState } from 'react';
+import { easings } from '@/components/gallery/work/animations';
 
 interface UseScrollResult {
-  scrollTo: (e: React.MouseEvent, target: string) => void;
-  rangeScrollTo: (target: string) => void;
-  scrollToImages: (e: React.MouseEvent, target: string) => void;
+  scrollTo: (e: React.MouseEvent, currentLink: string) => void;
+  rangeScrollTo: (currentLink: string) => void;
+  scrollToImages: (e: React.MouseEvent, currentLink: string) => void;
   isReady: boolean;
 }
 
@@ -55,14 +55,17 @@ export function useScroll(wrapper?: string): UseScrollResult {
           },
         });
 
-        // Force update scroll position and refresh
+        // Force update scroll position and resize
         if (locomotiveScrollRef.current) {
           locomotiveScrollRef.current.start();
           
-          // Refresh after a short delay to ensure everything is calculated correctly
+          // Use resize instead of refresh for new Lenis API
           setTimeout(() => {
-            if (locomotiveScrollRef.current) {
-              locomotiveScrollRef.current.refresh();
+            if (locomotiveScrollRef.current && locomotiveScrollRef.current.resize) {
+              locomotiveScrollRef.current.resize();
+              setIsReady(true);
+            } else {
+              // Fallback if resize method doesn't exist
               setIsReady(true);
             }
           }, 100);
@@ -86,11 +89,14 @@ export function useScroll(wrapper?: string): UseScrollResult {
     };
   }, [wrapper]);
 
-  // Add window resize handler to refresh Locomotive Scroll
+  // Add window resize handler to resize Locomotive Scroll
   useEffect(() => {
     const handleResize = () => {
       if (locomotiveScrollRef.current && isReady) {
-        locomotiveScrollRef.current.refresh();
+        // Use resize instead of refresh for new Lenis API
+        if (locomotiveScrollRef.current.resize) {
+          locomotiveScrollRef.current.resize();
+        }
       }
     };
 

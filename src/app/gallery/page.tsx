@@ -95,28 +95,6 @@ export default function Home() {
             <div className="loader"></div>
           </div>
         )}
-
-        {/* Debug button for testing (remove in production) */}
-        {process.env.NODE_ENV === 'development' && pageState === 'work' && (
-          <button 
-            onClick={restartAnimation}
-            style={{
-              position: 'fixed',
-              top: '20px',
-              right: '20px',
-              zIndex: 9999,
-              padding: '10px 15px',
-              backgroundColor: '#333',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Restart Animation
-          </button>
-        )}
       </main>
     </div>
   );
